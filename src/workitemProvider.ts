@@ -7,6 +7,9 @@ import path = require("path");
 export class YunxiaoWorkitemProvider implements vscode.TreeDataProvider<WorkItem> {
     private client: YunxiaoClient;
     private organizationId: string;
+    private _onDidChangeTreeData: vscode.EventEmitter<WorkItem | undefined | null | void> = new vscode.EventEmitter<WorkItem | undefined | null | void>();
+    readonly onDidChangeTreeData: vscode.Event<WorkItem | undefined | null | void> = this._onDidChangeTreeData.event;
+
     constructor(client: YunxiaoClient, organizationId: string) {
         this.client = client;
         this.organizationId = organizationId;
@@ -73,9 +76,6 @@ export class YunxiaoWorkitemProvider implements vscode.TreeDataProvider<WorkItem
 
         return Promise.resolve(workItemClasses);
     }
-
-    private _onDidChangeTreeData: vscode.EventEmitter<WorkItem | undefined | null | void> = new vscode.EventEmitter<WorkItem | undefined | null | void>();
-    readonly onDidChangeTreeData: vscode.Event<WorkItem | undefined | null | void> = this._onDidChangeTreeData.event;
 
     // Refresh the whole workitem tree view
     refresh(): void {

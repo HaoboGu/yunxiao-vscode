@@ -78,6 +78,7 @@ export class MultiStepInput {
 				input.totalSteps = totalSteps;
 				input.placeholder = placeholder;
 				input.items = items;
+				input.ignoreFocusOut = true;
 				if (activeItem) {
 					input.activeItems = [activeItem];
 				}
@@ -94,12 +95,6 @@ export class MultiStepInput {
 						}
 					}),
 					input.onDidChangeSelection(items => resolve(items[0])),
-					input.onDidHide(() => {
-						(async () => {
-							reject(shouldResume && await shouldResume() ? InputFlowAction.resume : InputFlowAction.cancel);
-						})()
-							.catch(reject);
-					})
 				);
 				if (this.current) {
 					this.current.dispose();
@@ -122,6 +117,7 @@ export class MultiStepInput {
 				input.totalSteps = totalSteps;
 				input.value = value || '';
 				input.prompt = prompt;
+				input.ignoreFocusOut = true;
 				input.buttons = [
 					...(this.steps.length > 1 ? [QuickInputButtons.Back] : []),
 					...(buttons || [])
@@ -153,12 +149,6 @@ export class MultiStepInput {
 							input.validationMessage = validationMessage;
 						}
 					}),
-					input.onDidHide(() => {
-						(async () => {
-							reject(shouldResume && await shouldResume() ? InputFlowAction.resume : InputFlowAction.cancel);
-						})()
-							.catch(reject);
-					})
 				);
 				if (this.current) {
 					this.current.dispose();

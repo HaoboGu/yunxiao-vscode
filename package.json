@@ -25,35 +25,41 @@
     "commands": [
       {
         "command": "yunxiao.login",
+        "category": "Yunxiao",
         "title": "登录云效",
         "shortTitle": "Yunxiao: login",
         "icon": "resource/login.svg"
       },
       {
         "command": "yunxiao.refreshTree",
+        "category": "Yunxiao",
         "title": "刷新工作项",
         "shortTitle": "Yunxiao: Refresh work items",
         "icon": "resource/sync.svg"
       },
       {
         "command": "yunxiao.createWorkItem",
+        "category": "Yunxiao",
         "title": "创建工作项",
         "shortTitle": "Yunxiao: Create work item",
         "icon": "resource/plus.svg"
       },
       {
         "command": "yunxiao.setOrganizationId",
+        "category": "Yunxiao",
         "title": "设置云效企业ID",
         "shortTitle": "Yunxiao: Set organization id"
       },
       {
         "command": "yunxiao.nextState",
+        "category": "Yunxiao",
         "title": "切换到下个状态",
         "shortTitle": "Yunxiao: Next state",
         "icon": "resource/right.svg"
       },
       {
         "command": "yunxiao.prevState",
+        "category": "Yunxiao",
         "title": "切换到上个状态",
         "shortTitle": "Yunxiao: Previous state",
         "icon": "resource/left.svg"
@@ -62,7 +68,7 @@
     "viewsWelcome": [
       {
         "view": "yunxiao-workitems",
-        "contents": "请点击设置阿里云云效\n\n[设置](command:yunxiao.login)\n\n相关文档：\n\n  [获取AK/SK](https://help.aliyun.com/document_detail/53045.html)\n\n  [获取云效企业ID](https://help.aliyun.com/document_detail/219322.html)"
+        "contents": "请点击设置阿里云云效\n\n[设置](command:yunxiao.login)\n\n相关文档：\n\n  1. [如何获取阿里云AK/SK](https://help.aliyun.com/document_detail/53045.html) \n2. [如何获取云效企业ID](https://help.aliyun.com/document_detail/219322.html)"
       }
     ],
     "viewsContainers": {
