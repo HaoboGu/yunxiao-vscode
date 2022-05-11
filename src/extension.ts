@@ -1,9 +1,8 @@
-// The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
-import * as vscode from 'vscode';
+import * as vscode from "vscode";
 import YunxiaoClient from './client';
 import { login } from './login';
 import { YunxiaoWorkitemProvider } from './workitemProvider';
+
 export function activate(context: vscode.ExtensionContext) {
 	vscode.commands.executeCommand('setContext', 'yunxiao.statusWithNext', [
 		"待处理",

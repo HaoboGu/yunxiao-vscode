@@ -1,5 +1,5 @@
-import AliyunOpenApiClient, * as Yunxiao from '@alicloud/devops20210625';
-import * as OpenApi from '@alicloud/openapi-client';
+import AliyunOpenApiClient, * as Yunxiao from "@alicloud/devops20210625";
+import * as OpenApi from "@alicloud/openapi-client";
 import Project from './project';
 import WorkItem from './workitem';
 

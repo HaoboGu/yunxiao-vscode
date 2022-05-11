@@ -1,4 +1,4 @@
-import * as vscode from 'vscode';
+import * as vscode from "vscode";
 import { MultiStepInput } from './components/multiStepInput';
 
 export async function login(context: vscode.ExtensionContext) {

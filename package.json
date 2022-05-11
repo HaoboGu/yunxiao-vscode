@@ -112,15 +112,15 @@
       ],
       "view/item/context": [
         {
-					"command": "yunxiao.nextState",
-					"when": "view == yunxiao-workitems && viewItem in yunxiao.statusWithNext",
-					"group": "inline"
-				},
+          "command": "yunxiao.nextState",
+          "when": "view == yunxiao-workitems && viewItem in yunxiao.statusWithNext",
+          "group": "inline"
+        },
         {
-					"command": "yunxiao.prevState",
-					"when": "view == yunxiao-workitems && viewItem in yunxiao.statusWithPrev",
-					"group": "inline"
-				}
+          "command": "yunxiao.prevState",
+          "when": "view == yunxiao-workitems && viewItem in yunxiao.statusWithPrev",
+          "group": "inline"
+        }
       ]
     }
   },

@@ -1,6 +1,6 @@
 import { ListWorkitemsResponseBodyWorkitems } from "@alicloud/devops20210625";
-import path = require("path");
 import { TreeItem, TreeItemCollapsibleState } from "vscode";
+import path = require("path");
 
 export default class WorkItem extends TreeItem {
     assignedTo?: string;
