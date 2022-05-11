@@ -48,8 +48,11 @@ export default class WorkItem extends TreeItem {
         this.subject = rawWorkItem.subject;
         this.updateStatusAt = rawWorkItem.updateStatusAt;
         this.workitemTypeIdentifier = rawWorkItem.workitemTypeIdentifier;
+        // Set tree view item's info
         this.updateIcon();
         this.contextValue = rawWorkItem.status;
+        this.description = this.status;
+        this.id = this.identifier;
     }
 
     /**
