@@ -5,6 +5,30 @@ import YunxiaoClient from './client';
 import { login } from './login';
 import { YunxiaoWorkitemProvider } from './workitemProvider';
 export function activate(context: vscode.ExtensionContext) {
+	vscode.commands.executeCommand('setContext', 'yunxiao.statusWithNext', [
+		"待处理",
+		"待修复",
+		"再次打开",
+		"处理中",
+		"开发中",
+		"测试中",
+		"设计中",
+		"暂不修复",
+		"已取消"
+	]);
+
+	vscode.commands.executeCommand('setContext', 'yunxiao.statusWithPrev', [
+		"再次打开",
+		"处理中",
+		"开发中",
+		"测试中",
+		"设计中",
+		"暂不修复",
+		"已取消",
+		"已修复",
+		"已完成"
+	]);
+
 	let loginCmd = vscode.commands.registerCommand('yunxiao.login', async () => {
 		await login(context);
 		let accessKeyId: string | undefined = context.globalState.get("yunxiao.accessKeyId");
@@ -38,8 +62,11 @@ export function activate(context: vscode.ExtensionContext) {
 
 	let refreshTreeCmd = vscode.commands.registerCommand('yunxiao.refreshTree', () => { });
 	let createWorkItemCmd = vscode.commands.registerCommand('yunxiao.createWorkItem', () => { });
+	let setOrganizationIdCmd = vscode.commands.registerCommand('yunxiao.setOrganizationId', () => { });
+	let nextStateCmd = vscode.commands.registerCommand('yunxiao.nextState', () => { });
+	let prevStateCmd = vscode.commands.registerCommand('yunxiao.prevState', () => { });
 
-	context.subscriptions.push(loginCmd, refreshTreeCmd, createWorkItemCmd);
+	context.subscriptions.push(loginCmd, refreshTreeCmd, createWorkItemCmd, setOrganizationIdCmd, prevStateCmd, nextStateCmd);
 }
 
 // this method is called when your extension is deactivated

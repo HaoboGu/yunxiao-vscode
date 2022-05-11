@@ -49,39 +49,40 @@ export default class WorkItem extends TreeItem {
         this.updateStatusAt = rawWorkItem.updateStatusAt;
         this.workitemTypeIdentifier = rawWorkItem.workitemTypeIdentifier;
         this.updateIcon();
+        this.contextValue = rawWorkItem.status;
     }
 
     /**
      * Update current workitem's icon
      */
     public updateIcon() {
-        let iconPath = path.join(__filename, "..", "..", "resource", "new.svg");
+        let iconPath = path.join(__filename, "..", "..", "resource", "question-circle.svg");
         switch (this.status) {
             case "待处理":
             case "待修复":
             case "再次打开": {
-                iconPath = path.join(__filename, "..", "..", "resource", "new.svg");
+                iconPath = path.join(__filename, "..", "..", "resource", "play-circle.svg");
                 break;
             }
             case "处理中":
             case "开发中":
             case "测试中":
             case "设计中": {
-                iconPath = path.join(__filename, "..", "..", "resource", "doing.svg");
+                iconPath = path.join(__filename, "..", "..", "resource", "time-circle.svg");
                 break;
             }
             case "已修复":
             case "已完成": {
-                iconPath = path.join(__filename, "..", "..", "resource", "done.svg");
+                iconPath = path.join(__filename, "..", "..", "resource", "check-circle.svg");
                 break;
             }
             case "暂不修复":
             case "已取消": {
-                iconPath = path.join(__filename, "..", "..", "resource", "closed.svg");
+                iconPath = path.join(__filename, "..", "..", "resource", "minus-circle.svg");
                 break;
             }
             default: {
-                iconPath = path.join(__filename, "..", "..", "resource", "question.svg");
+                iconPath = path.join(__filename, "..", "..", "resource", "question-circle.svg");
                 break;
             }
         }

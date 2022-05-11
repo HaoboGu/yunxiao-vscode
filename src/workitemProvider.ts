@@ -46,8 +46,8 @@ export class YunxiaoWorkitemProvider implements vscode.TreeDataProvider<WorkItem
         task.contextValue = "yunxiao.firstLayer";
         task.collapsibleState = vscode.TreeItemCollapsibleState.Expanded;
         task.iconPath = {
-            light: path.join(__filename, "..", "..", "resource", "g_钻石.svg"),
-            dark: path.join(__filename, "..", "..", "resource", "g_钻石.svg"),
+            light: path.join(__filename, "..", "..", "resource", "detail.svg"),
+            dark: path.join(__filename, "..", "..", "resource", "detail.svg"),
         };
 
         let req = new WorkItem(new ListWorkitemsResponseBodyWorkitems({
@@ -56,8 +56,8 @@ export class YunxiaoWorkitemProvider implements vscode.TreeDataProvider<WorkItem
         req.contextValue = "yunxiao.firstLayer";
         req.collapsibleState = vscode.TreeItemCollapsibleState.Expanded;
         req.iconPath = {
-            light: path.join(__filename, "..", "..", "resource", "g_钻石.svg"),
-            dark: path.join(__filename, "..", "..", "resource", "g_钻石.svg"),
+            light: path.join(__filename, "..", "..", "resource", "project.svg"),
+            dark: path.join(__filename, "..", "..", "resource", "project.svg"),
         };
 
         let bug = new WorkItem(new ListWorkitemsResponseBodyWorkitems({
@@ -66,8 +66,8 @@ export class YunxiaoWorkitemProvider implements vscode.TreeDataProvider<WorkItem
         bug.contextValue = "yunxiao.firstLayer";
         bug.collapsibleState = vscode.TreeItemCollapsibleState.Expanded;
         bug.iconPath = {
-            light: path.join(__filename, "..", "..", "resource", "g_钻石.svg"),
-            dark: path.join(__filename, "..", "..", "resource", "g_钻石.svg"),
+            light: path.join(__filename, "..", "..", "resource", "bug.svg"),
+            dark: path.join(__filename, "..", "..", "resource", "bug.svg"),
         };
         let workItemClasses: WorkItem[] = [task, req, bug];
 
