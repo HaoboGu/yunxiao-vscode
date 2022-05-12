@@ -115,6 +115,14 @@ export async function createWorkItem(client: YunxiaoClient) {
         fieldIdentifier: "priority",
         value: "4e3221ee4299cca11772b3c147",
     })];
+
+    if (state.category === "Bug") {
+        defaultFieldValueList.push(new CreateWorkitemRequestFieldValueList({
+            fieldIdentifier: "seriousLevel",
+            value: "7976384f5cbacf6e3bcf70da3b",
+        }));
+    }
+
     if (!state.project.description) {
         state.project.description = "";
     }
