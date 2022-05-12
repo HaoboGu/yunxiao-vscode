@@ -7,7 +7,7 @@ import { getWorkItemTypeIdentifier } from "./workitem";
 
 export async function createWorkItem(client: YunxiaoClient) {
     const title = "创建云效工作项";
-    const workItemTypes = [{ label: "需求", description: "Req" }, { label: "任务", description: "Task" }, { label: "缺陷", description: "Bug" }];
+    const workItemTypes = [{ label: "任务", description: "Task" }, { label: "需求", description: "Req" }, { label: "缺陷", description: "Bug" }];
     const organizationId = getOrganizationId();
     const aliyunId = getAliyunId();
     if (!organizationId || !aliyunId) {
