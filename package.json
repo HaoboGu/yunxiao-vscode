@@ -19,6 +19,9 @@
       "properties": {
         "yunxiao.organizationId": {
           "type": "string"
+        },
+        "yunxiao.aliyunId": {
+          "type": "string"
         }
       }
     },
@@ -49,6 +52,12 @@
         "category": "Yunxiao",
         "title": "设置云效企业ID",
         "shortTitle": "Yunxiao: Set organization id"
+      },
+      {
+        "command": "yunxiao.setAliyunId",
+        "category": "Yunxiao",
+        "title": "设置阿里云ID",
+        "shortTitle": "Yunxiao: Set aliyun id"
       },
       {
         "command": "yunxiao.nextState",

@@ -3,6 +3,7 @@ import * as OpenApi from "@alicloud/openapi-client";
 import Project from './project';
 import WorkItem from './workitem';
 
+export let currentUser: string = "";
 export default class YunxiaoClient {
     private apiClient: AliyunOpenApiClient | undefined;
 
@@ -52,6 +53,44 @@ export default class YunxiaoClient {
             fieldType: "status",
         });
         let response = await this.apiClient?.updateWorkItem(organizationId, request);
+        if (response?.body.success && response.body.workitem) {
+            return response.body.workitem;
+        } else {
+            console.log("Calling Aliyun open api fails, error message: ", response?.body.errorMsg);
+            return undefined;
+        }
+    }
+
+    public async listWorkItemAllFields(organizationId: string, spaceIdentifier: string, workItemTypeIdentifier: string) {
+        let request = new Yunxiao.ListWorkItemAllFieldsRequest({
+            spaceIdentifier: spaceIdentifier,
+            spaceType: "Project",
+            workitemTypeIdentifier: workItemTypeIdentifier
+        });
+        let response = await this.apiClient?.listWorkItemAllFields(organizationId, request);
+        if (response?.body.success && response.body.fields) {
+            return response.body.fields;
+        } else {
+            console.log("Calling Aliyun open api fails, error message: ", response?.body.errorMsg);
+            return undefined;
+        }
+    }
+
+    public async createWorkItem(organizationId: string, spaceIdentifier: string, assignedTo: string, category: string, workItemType: string, subject: string, description: string, fieldValueList: Yunxiao.CreateWorkitemRequestFieldValueList[]) {
+        let request = new Yunxiao.CreateWorkitemRequest({
+            ak: new Yunxiao.CreateWorkitemRequestAk({ issue: new Yunxiao.CreateWorkitemRequestAkIssue({}) }),
+            workitem: new Yunxiao.CreateWorkitemRequestWorkitem({}),
+            assignedTo: assignedTo,
+            category: category,
+            description: description,
+            subject: subject,
+            fieldValueList: fieldValueList,
+            spaceIdentifier: spaceIdentifier,
+            space: spaceIdentifier,
+            spaceType: "Project",
+            workitemType: workItemType,
+        });
+        let response = await this.apiClient?.createWorkitem(organizationId, request);
         if (response?.body.success && response.body.workitem) {
             return response.body.workitem;
         } else {

@@ -1,7 +1,5 @@
 import * as vscode from "vscode";
-import YunxiaoClient from "./client";
 import { MultiStepInput } from './components/multiStepInput';
-import { YunxiaoWorkitemProvider } from "./workItemProvider";
 
 export async function login(context: vscode.ExtensionContext) {
     const title = "设置yunxiao-vscode";
@@ -12,6 +10,7 @@ export async function login(context: vscode.ExtensionContext) {
         accessKeyId: string;
         accessKeySecret: string;
         organizationId: string;
+        aliyunId: string;
     }
 
     // 开始多步Input
@@ -25,7 +24,7 @@ export async function login(context: vscode.ExtensionContext) {
         state.accessKeyId = await input.showInputBox({
             title,
             step: 1,
-            totalSteps: 3,
+            totalSteps: 4,
             value: '',
             prompt: "输入阿里云AK",
             validate: validateInputIsEmpty,
@@ -39,7 +38,7 @@ export async function login(context: vscode.ExtensionContext) {
         state.accessKeySecret = await input.showInputBox({
             title,
             step: 2,
-            totalSteps: 3,
+            totalSteps: 4,
             value: '',
             prompt: "输入阿里云SK",
             validate: validateInputIsEmpty,
@@ -53,9 +52,22 @@ export async function login(context: vscode.ExtensionContext) {
         state.organizationId = await input.showInputBox({
             title,
             step: 3,
-            totalSteps: 3,
+            totalSteps: 4,
             value: '',
             prompt: "输入云效企业ID",
+            validate: validateInputIsEmpty,
+            shouldResume: shouldResume
+        });
+        return (input: MultiStepInput) => setAliyunId(input, state);
+    }
+
+    async function setAliyunId(input: MultiStepInput, state: Partial<QuickPickState>) {
+        state.aliyunId = await input.showInputBox({
+            title,
+            step: 4,
+            totalSteps: 4,
+            value: '',
+            prompt: "输入你的阿里云ID",
             validate: validateInputIsEmpty,
             shouldResume: shouldResume
         });
@@ -73,24 +85,29 @@ export async function login(context: vscode.ExtensionContext) {
     const state = await collectInputs();
 
     // save AK to global state, then create and register work item tree provider
-    if (state.accessKeyId && state.accessKeySecret) {
-        context.globalState.update("yunxiao.accessKeyId", state.accessKeyId);
-        context.globalState.update("yunxiao.accessKeySecret", state.accessKeySecret);
-        if (state.organizationId) {
-            // save organizationId to config
-            vscode.workspace.getConfiguration().update("yunxiao.organizationId", state.organizationId, vscode.ConfigurationTarget.Global);
-            return {
-                accessKeyId: state.accessKeyId,
-                accessKeySecret: state.accessKeySecret,
-                organizationId: state.organizationId,
-            };
-
-        } else {
-            vscode.window.showErrorMessage("请使用setOrganizationId命令设置云效企业ID");
-        }
-    } else {
-        vscode.window.showErrorMessage("请正确设置云效登录信息");
+    if (!state.accessKeyId || !state.accessKeySecret) {
+        vscode.window.showErrorMessage("请正确设置阿里云AK/SK");
+        return;
     }
+    if (!state.organizationId) {
+        vscode.window.showErrorMessage("请使用setOrganizationId命令设置云效企业ID");
+        return;
+    }
+    if (!state.aliyunId) {
+        vscode.window.showErrorMessage("请使用setAliyunId命令设置阿里云ID");
+        return;
+    }
+
+    context.globalState.update("yunxiao.accessKeyId", state.accessKeyId);
+    context.globalState.update("yunxiao.accessKeySecret", state.accessKeySecret);
+    vscode.workspace.getConfiguration().update("yunxiao.organizationId", state.organizationId, vscode.ConfigurationTarget.Global);
+    vscode.workspace.getConfiguration().update("yunxiao.aliyunId", state.aliyunId, vscode.ConfigurationTarget.Global);
+    return {
+        accessKeyId: state.accessKeyId,
+        accessKeySecret: state.accessKeySecret,
+        organizationId: state.organizationId,
+        aliyunId: state.aliyunId,
+    };
 }
 
 export async function setOrganizationId() {
@@ -103,5 +120,18 @@ export async function setOrganizationId() {
         vscode.workspace.getConfiguration().update("yunxiao.organizationId", organizationId, vscode.ConfigurationTarget.Global);
     } else {
         vscode.window.showErrorMessage("请输入正确的云效企业ID");
+    }
+}
+
+export async function setAliyunId() {
+    let aliyunId = await vscode.window.showInputBox({
+        title: "输入你的阿里云ID",
+        value: '',
+        ignoreFocusOut: true,
+    });
+    if (aliyunId) {
+        vscode.workspace.getConfiguration().update("yunxiao.aliyunId", aliyunId, vscode.ConfigurationTarget.Global);
+    } else {
+        vscode.window.showErrorMessage("请输入正确的阿里云ID");
     }
 }

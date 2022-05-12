@@ -1,17 +1,19 @@
 import WorkItem from './workitem';
 import * as vscode from "vscode";
-import YunxiaoClient from './client';
 import { ListWorkitemsResponseBodyWorkitems } from "@alicloud/devops20210625";
 import path = require("path");
 import { apiClient } from './extension';
+import Project from './project';
 
 export class YunxiaoWorkitemProvider implements vscode.TreeDataProvider<WorkItem> {
     private organizationId: string;
+    private projects: Project[];
     private _onDidChangeTreeData: vscode.EventEmitter<WorkItem | undefined | null | void> = new vscode.EventEmitter<WorkItem | undefined | null | void>();
     readonly onDidChangeTreeData: vscode.Event<WorkItem | undefined | null | void> = this._onDidChangeTreeData.event;
 
     constructor(organizationId: string) {
         this.organizationId = organizationId;
+        this.projects = [];
     }
 
     getTreeItem(element: WorkItem): vscode.TreeItem {
@@ -23,25 +25,40 @@ export class YunxiaoWorkitemProvider implements vscode.TreeDataProvider<WorkItem
         if (!element) {
             // If element is empty, get the first layer
             return this.getFirstLayer();
-        }
-        if (element.contextValue === "yunxiao.firstLayer") {
+        } else if (element.contextValue === "yunxiao.firstLayer") {
             switch (element.label) {
                 case "任务": {
-                    return apiClient.listWorkItems(this.organizationId, "1fd3ef025d5b53084b390abbd6", "Task");
+                    return this.getWorkItems("Task");
                 }
                 case "需求": {
-                    return apiClient.listWorkItems(this.organizationId, "1fd3ef025d5b53084b390abbd6", "Req");
+                    return this.getWorkItems("Req");
                 }
                 case "缺陷": {
-                    return apiClient.listWorkItems(this.organizationId, "1fd3ef025d5b53084b390abbd6", "Bug");
+                    return this.getWorkItems("Bug");
                 }
             }
         }
         return Promise.resolve([]);
     }
 
+    private async getWorkItems(workItemType: string): Promise<WorkItem[]> {
+        if (this.projects.length === 0) {
+            this.projects = await apiClient.listProjects(this.organizationId);
+        }
+        let workItems: WorkItem[] = [];
+        for (let p of this.projects) {
+            if (p.identifier) {
+                workItems = workItems.concat(await apiClient.listWorkItems(this.organizationId, p.identifier, workItemType));
+            }
+        }
+        return workItems;
+    }
+
     // Currently, the first layer of our workitem tree view has three items: 任务、需求、缺陷
-    private getFirstLayer(): Thenable<WorkItem[]> {
+    private async getFirstLayer(): Promise<WorkItem[]> {
+        if (this.projects.length === 0) {
+            this.projects = await apiClient.listProjects(this.organizationId);
+        }
         let task = new WorkItem(new ListWorkitemsResponseBodyWorkitems({
             subject: "任务",
         }));
