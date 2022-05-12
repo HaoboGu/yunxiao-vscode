@@ -46,16 +46,13 @@ export function getPrevState(currentStatus: string, workItemType: string): strin
     } else if (workItemType === "Bug") {
         switch (currentStatus) {
             case "再次打开": {
-                return "已关闭";
+                return "已修复";
             }
             case "处理中": {
                 return "待修复";
             }
-            case "已修复": {
-                return "处理中";
-            }
             case "已关闭": {
-                return "已修复";
+                return "再次打开";
             }
         }
     }

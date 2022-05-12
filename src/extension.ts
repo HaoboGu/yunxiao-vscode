@@ -19,6 +19,7 @@ export function activate(context: vscode.ExtensionContext) {
 		"测试中",
 		"设计中",
 		"暂不修复",
+		"已修复",
 		"已取消"
 	]);
 	vscode.commands.executeCommand('setContext', 'yunxiao.statusWithPrev', [
@@ -29,8 +30,8 @@ export function activate(context: vscode.ExtensionContext) {
 		"设计中",
 		"暂不修复",
 		"已取消",
-		"已修复",
-		"已完成"
+		"已完成",
+		"已关闭"
 	]);
 
 	// login command
