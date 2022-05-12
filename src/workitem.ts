@@ -1,4 +1,4 @@
-import { ListWorkitemsResponseBodyWorkitems } from "@alicloud/devops20210625";
+import { ListWorkitemsResponseBodyWorkitems, UpdateWorkItemResponseBodyWorkitem } from "@alicloud/devops20210625";
 import { TreeItem, TreeItemCollapsibleState } from "vscode";
 import path = require("path");
 
@@ -23,13 +23,13 @@ export default class WorkItem extends TreeItem {
     subject?: string;
     updateStatusAt?: number;
     workitemTypeIdentifier?: string;
-    constructor(rawWorkItem: ListWorkitemsResponseBodyWorkitems) {
+    constructor(rawWorkItem: ListWorkitemsResponseBodyWorkitems | UpdateWorkItemResponseBodyWorkitem) {
         if (!rawWorkItem.subject) {
             rawWorkItem.subject = "";
         }
         super(rawWorkItem.subject, TreeItemCollapsibleState.None);
         this.assignedTo = rawWorkItem.assignedTo;
-        this.categoryIdentifier = rawWorkItem.categoryIdentifier;
+        this.categoryIdentifier = rawWorkItem.categoryIdentifier; // Task/Req/Bug
         this.creator = rawWorkItem.creator;
         this.document = rawWorkItem.document;
         this.gmtCreate = rawWorkItem.gmtCreate;
@@ -93,5 +93,37 @@ export default class WorkItem extends TreeItem {
             light: iconPath,
             dark: iconPath,
         };
+    }
+
+    public update(rawWorkItem: UpdateWorkItemResponseBodyWorkitem) {
+        if (!rawWorkItem.subject) {
+            rawWorkItem.subject = "";
+        }
+        this.label = rawWorkItem.subject;
+        this.assignedTo = rawWorkItem.assignedTo;
+        this.categoryIdentifier = rawWorkItem.categoryIdentifier; // Task/Req/Bug
+        this.creator = rawWorkItem.creator;
+        this.document = rawWorkItem.document;
+        this.gmtCreate = rawWorkItem.gmtCreate;
+        this.gmtModified = rawWorkItem.gmtModified;
+        this.identifier = rawWorkItem.identifier;
+        this.logicalStatus = rawWorkItem.logicalStatus;
+        this.modifier = rawWorkItem.modifier;
+        this.parentIdentifier = rawWorkItem.parentIdentifier;
+        this.serialNumber = rawWorkItem.serialNumber;
+        this.spaceIdentifier = rawWorkItem.spaceIdentifier;
+        this.spaceName = rawWorkItem.spaceName;
+        this.spaceType = rawWorkItem.spaceType;
+        this.status = rawWorkItem.status;
+        this.statusIdentifier = rawWorkItem.statusIdentifier;
+        this.statusStageIdentifier = rawWorkItem.statusStageIdentifier;
+        this.subject = rawWorkItem.subject;
+        this.updateStatusAt = rawWorkItem.updateStatusAt;
+        this.workitemTypeIdentifier = rawWorkItem.workitemTypeIdentifier;
+        // Set tree view item's info
+        this.updateIcon();
+        this.contextValue = rawWorkItem.status;
+        this.description = this.status;
+        this.id = this.identifier;
     }
 }

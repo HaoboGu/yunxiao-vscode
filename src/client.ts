@@ -43,4 +43,20 @@ export default class YunxiaoClient {
             return [];
         }
     }
+
+    public async updateWorkItemStatus(organizationId: string, workItem: WorkItem, statusIdentifier: string) {
+        let request = new Yunxiao.UpdateWorkItemRequest({
+            propertyKey: "status",
+            propertyValue: statusIdentifier,
+            identifier: workItem.identifier,
+            fieldType: "status",
+        });
+        let response = await this.apiClient?.updateWorkItem(organizationId, request);
+        if (response?.body.success && response.body.workitem) {
+            return response.body.workitem;
+        } else {
+            console.log("Calling Aliyun open api fails, error message: ", response?.body.errorMsg);
+            return undefined;
+        }
+    }
 }

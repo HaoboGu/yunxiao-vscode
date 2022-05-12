@@ -1,9 +1,13 @@
 import * as vscode from "vscode";
 import YunxiaoClient from './client';
 import { login, setOrganizationId } from './login';
+import WorkItem from "./workitem";
 import { YunxiaoWorkitemProvider } from './workitemProvider';
+import { nextState, prevState } from "./workItemState";
 
-let provider: YunxiaoWorkitemProvider;
+export let provider: YunxiaoWorkitemProvider;
+export let apiClient: YunxiaoClient;
+export let currentOrgId: string;
 export function activate(context: vscode.ExtensionContext) {
 	// Set context for package.json
 	vscode.commands.executeCommand('setContext', 'yunxiao.statusWithNext', [
@@ -37,6 +41,7 @@ export function activate(context: vscode.ExtensionContext) {
 		}
 	});
 
+	// Create yunxiao work item tree
 	createYunxiaoView(context);
 
 	// Commands
@@ -50,8 +55,20 @@ export function activate(context: vscode.ExtensionContext) {
 		await setOrganizationId();
 		createYunxiaoView(context);
 	});
-	let nextStateCmd = vscode.commands.registerCommand('yunxiao.nextState', () => { });
-	let prevStateCmd = vscode.commands.registerCommand('yunxiao.prevState', () => { });
+	let nextStateCmd = vscode.commands.registerCommand('yunxiao.nextState', async (workItem: WorkItem) => {
+		let result = await nextState(workItem);
+		if (result) {
+			workItem.update(result);
+			provider.refreshItem(workItem);
+		}
+	});
+	let prevStateCmd = vscode.commands.registerCommand('yunxiao.prevState', async (workItem: WorkItem) => {
+		let result = await prevState(workItem);
+		if (result) {
+			workItem.update(result);
+			provider.refreshItem(workItem);
+		}
+	});
 
 	context.subscriptions.push(loginCmd, refreshTreeCmd, createWorkItemCmd, setOrganizationIdCmd, prevStateCmd, nextStateCmd);
 }
@@ -64,10 +81,11 @@ function createYunxiaoView(context: vscode.ExtensionContext) {
 	let accessKeySecret: string | undefined = context.globalState.get("yunxiao.accessKeySecret");
 	if (accessKeyId && accessKeySecret) {
 		let organizationId: string | undefined = vscode.workspace.getConfiguration().get("yunxiao.organizationId");
-		if (!organizationId) {
-			vscode.window.showErrorMessage("请使用setOrganizationId命令设置云效企业ID");
-		} else {
+		if (organizationId) {
+			currentOrgId = organizationId;
 			initializeYunxiaoWorkItemTree(accessKeyId, accessKeySecret, organizationId);
+		} else {
+			vscode.window.showErrorMessage("请使用setOrganizationId命令设置云效企业ID");
 		}
 	} else {
 		vscode.window.showErrorMessage("请正确设置云效登录信息");
@@ -75,8 +93,8 @@ function createYunxiaoView(context: vscode.ExtensionContext) {
 }
 
 function initializeYunxiaoWorkItemTree(accessKeyId: string, accessKeySecret: string, organizationId: string) {
-	let client = new YunxiaoClient(accessKeyId, accessKeySecret);
-	provider = new YunxiaoWorkitemProvider(client, organizationId);
+	apiClient = new YunxiaoClient(accessKeyId, accessKeySecret);
+	provider = new YunxiaoWorkitemProvider(organizationId);
 	vscode.window.registerTreeDataProvider('yunxiao-workitems', provider);
 	provider.refresh();
 }

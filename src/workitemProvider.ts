@@ -3,15 +3,14 @@ import * as vscode from "vscode";
 import YunxiaoClient from './client';
 import { ListWorkitemsResponseBodyWorkitems } from "@alicloud/devops20210625";
 import path = require("path");
+import { apiClient } from './extension';
 
 export class YunxiaoWorkitemProvider implements vscode.TreeDataProvider<WorkItem> {
-    private client: YunxiaoClient;
     private organizationId: string;
     private _onDidChangeTreeData: vscode.EventEmitter<WorkItem | undefined | null | void> = new vscode.EventEmitter<WorkItem | undefined | null | void>();
     readonly onDidChangeTreeData: vscode.Event<WorkItem | undefined | null | void> = this._onDidChangeTreeData.event;
 
-    constructor(client: YunxiaoClient, organizationId: string) {
-        this.client = client;
+    constructor(organizationId: string) {
         this.organizationId = organizationId;
     }
 
@@ -28,13 +27,13 @@ export class YunxiaoWorkitemProvider implements vscode.TreeDataProvider<WorkItem
         if (element.contextValue === "yunxiao.firstLayer") {
             switch (element.label) {
                 case "任务": {
-                    return this.client.listWorkItems(this.organizationId, "1fd3ef025d5b53084b390abbd6", "Task");
+                    return apiClient.listWorkItems(this.organizationId, "1fd3ef025d5b53084b390abbd6", "Task");
                 }
                 case "需求": {
-                    return this.client.listWorkItems(this.organizationId, "1fd3ef025d5b53084b390abbd6", "Req");
+                    return apiClient.listWorkItems(this.organizationId, "1fd3ef025d5b53084b390abbd6", "Req");
                 }
                 case "缺陷": {
-                    return this.client.listWorkItems(this.organizationId, "1fd3ef025d5b53084b390abbd6", "Bug");
+                    return apiClient.listWorkItems(this.organizationId, "1fd3ef025d5b53084b390abbd6", "Bug");
                 }
             }
         }
