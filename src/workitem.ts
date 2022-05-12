@@ -63,6 +63,7 @@ export default class WorkItem extends TreeItem {
         switch (this.status) {
             case "待处理":
             case "待修复":
+            case "待确认":
             case "再次打开": {
                 iconPath = path.join(__filename, "..", "..", "resource", "play-circle.svg");
                 break;
