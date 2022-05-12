@@ -1,12 +1,13 @@
-import { apiClient, globalOrganizationId } from "./extension";
+import { apiClient, getOrganizationId } from "./extension";
 import WorkItem from "./workitem";
 import * as vscode from "vscode";
 
 export async function nextState(workItem: WorkItem) {
-    if (workItem.status && workItem.categoryIdentifier) {
+    let organizationId = getOrganizationId();
+    if (organizationId && workItem.status && workItem.categoryIdentifier) {
         let nextStateIdentifier = getStateIdentifier(getNextState(workItem.status, workItem.categoryIdentifier));
         if (nextStateIdentifier) {
-            return await apiClient.updateWorkItemStatus(globalOrganizationId, workItem, nextStateIdentifier);
+            return await apiClient.updateWorkItemStatus(organizationId, workItem, nextStateIdentifier);
         } else {
             vscode.window.showInformationMessage("无法获取下一个工作项状态");
         }
@@ -16,10 +17,11 @@ export async function nextState(workItem: WorkItem) {
 }
 
 export async function prevState(workItem: WorkItem) {
-    if (workItem.status && workItem.categoryIdentifier) {
+    let organizationId = getOrganizationId();
+    if (organizationId && workItem.status && workItem.categoryIdentifier) {
         let prevStateIdentifier = getStateIdentifier(getPrevState(workItem.status, workItem.categoryIdentifier));
         if (prevStateIdentifier) {
-            return await apiClient.updateWorkItemStatus(globalOrganizationId, workItem, prevStateIdentifier);
+            return await apiClient.updateWorkItemStatus(organizationId, workItem, prevStateIdentifier);
         } else {
             vscode.window.showInformationMessage("无法获取前一个工作项状态");
         }

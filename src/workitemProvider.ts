@@ -24,38 +24,56 @@ export class YunxiaoWorkitemProvider implements vscode.TreeDataProvider<WorkItem
     getChildren(element?: WorkItem): Thenable<WorkItem[]> {
         if (!element) {
             // If element is empty, get the first layer
-            return this.getFirstLayer();
-        } else if (element.contextValue === "yunxiao.firstLayer") {
+            return this.getTopLayer();
+        } else if (element.contextValue === "yunxiao.topLayer") {
+            return this.getFirstLayer(element);
+        }
+        else if (element.contextValue === "yunxiao.firstLayer") {
             switch (element.label) {
                 case "任务": {
-                    return this.getWorkItems("Task");
+                    return this.getWorkItems("Task", element.spaceIdentifier);
                 }
                 case "需求": {
-                    return this.getWorkItems("Req");
+                    return this.getWorkItems("Req", element.spaceIdentifier);
                 }
                 case "缺陷": {
-                    return this.getWorkItems("Bug");
+                    return this.getWorkItems("Bug", element.spaceIdentifier);
                 }
             }
         }
         return Promise.resolve([]);
     }
 
-    private async getWorkItems(workItemType: string): Promise<WorkItem[]> {
+    private async getTopLayer(): Promise<WorkItem[]> {
         if (this.projects.length === 0) {
             this.projects = await apiClient.listProjects(this.organizationId);
         }
-        let workItems: WorkItem[] = [];
+        let projectNodes: WorkItem[] = [];
         for (let p of this.projects) {
-            if (p.identifier) {
-                workItems = workItems.concat(await apiClient.listWorkItems(this.organizationId, p.identifier, workItemType));
-            }
+            let node = new WorkItem(new ListWorkitemsResponseBodyWorkitems({
+                subject: p.name,
+            }));
+            node.spaceIdentifier = p.identifier;
+            node.contextValue = "yunxiao.topLayer";
+            node.collapsibleState = vscode.TreeItemCollapsibleState.Collapsed;
+            node.iconPath = {
+                light: path.join(__filename, "..", "..", "resource", "yunxiao.svg"),
+                dark: path.join(__filename, "..", "..", "resource", "yunxiao.svg"),
+            };
+            projectNodes.push(node);
         }
-        return workItems;
+        return projectNodes;
+    }
+
+    private async getWorkItems(workItemType: string, spaceIdentifier: string | undefined): Promise<WorkItem[]> {
+        if (!spaceIdentifier) {
+            return [];
+        }
+        return await apiClient.listWorkItems(this.organizationId, spaceIdentifier, workItemType);
     }
 
     // Currently, the first layer of our workitem tree view has three items: 任务、需求、缺陷
-    private async getFirstLayer(): Promise<WorkItem[]> {
+    private async getFirstLayer(element: WorkItem): Promise<WorkItem[]> {
         if (this.projects.length === 0) {
             this.projects = await apiClient.listProjects(this.organizationId);
         }
@@ -68,6 +86,7 @@ export class YunxiaoWorkitemProvider implements vscode.TreeDataProvider<WorkItem
             light: path.join(__filename, "..", "..", "resource", "detail.svg"),
             dark: path.join(__filename, "..", "..", "resource", "detail.svg"),
         };
+        task.spaceIdentifier = element.spaceIdentifier;
 
         let req = new WorkItem(new ListWorkitemsResponseBodyWorkitems({
             subject: "需求",
@@ -78,6 +97,7 @@ export class YunxiaoWorkitemProvider implements vscode.TreeDataProvider<WorkItem
             light: path.join(__filename, "..", "..", "resource", "project.svg"),
             dark: path.join(__filename, "..", "..", "resource", "project.svg"),
         };
+        req.spaceIdentifier = element.spaceIdentifier;
 
         let bug = new WorkItem(new ListWorkitemsResponseBodyWorkitems({
             subject: "缺陷",
@@ -88,6 +108,8 @@ export class YunxiaoWorkitemProvider implements vscode.TreeDataProvider<WorkItem
             light: path.join(__filename, "..", "..", "resource", "bug.svg"),
             dark: path.join(__filename, "..", "..", "resource", "bug.svg"),
         };
+        bug.spaceIdentifier = element.spaceIdentifier;
+
         let workItemClasses: WorkItem[] = [task, req, bug];
 
         return Promise.resolve(workItemClasses);

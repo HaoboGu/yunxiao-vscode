@@ -2,12 +2,17 @@ import { CreateWorkitemRequestFieldValueList } from "@alicloud/devops20210625";
 import { QuickPickItem } from "vscode";
 import YunxiaoClient from "./client";
 import { MultiStepInput } from "./components/multiStepInput";
-import { globalAliyunId, globalOrganizationId } from "./extension";
+import { getAliyunId, getOrganizationId } from "./extension";
 import { getWorkItemTypeIdentifier } from "./workitem";
 
 export async function createWorkItem(client: YunxiaoClient) {
     const title = "创建云效工作项";
     const workItemTypes = [{ label: "需求", description: "Req" }, { label: "任务", description: "Task" }, { label: "缺陷", description: "Bug" }];
+    const organizationId = getOrganizationId();
+    const aliyunId = getAliyunId();
+    if (!organizationId || !aliyunId) {
+        return;
+    }
     interface QuickPickState {
         title: string;
         step: number;
@@ -15,12 +20,8 @@ export async function createWorkItem(client: YunxiaoClient) {
         project: QuickPickItem; // 所属的项目
         subject: string;
         description: string;
-        assignedTo: string;
-        space: string;
-        spaceIdentifier: string;
         category: string; // 工作项类型：Task/Req/Bug
         workItemType: string; // 工作项小类型
-        fieldValueList: string[];
     }
 
     // 开始多步Input
@@ -30,7 +31,10 @@ export async function createWorkItem(client: YunxiaoClient) {
         return state as QuickPickState;
     }
     async function chooseProject(input: MultiStepInput, state: Partial<QuickPickState>) {
-        let projects = await client.listProjects(globalOrganizationId);
+        if (!organizationId) {
+            return;
+        }
+        let projects = await client.listProjects(organizationId);
         let items: QuickPickItem[] = [];
         projects.forEach(p => {
             if (p.name) {
@@ -62,6 +66,9 @@ export async function createWorkItem(client: YunxiaoClient) {
             validate: validateInputIsEmpty,
             shouldResume: shouldResume
         });
+        state.category = type.description;
+        state.workItemType = getWorkItemTypeIdentifier(type.description);
+
         return (input: MultiStepInput) => inputSubject(input, state);
     }
 
@@ -111,5 +118,5 @@ export async function createWorkItem(client: YunxiaoClient) {
     if (!state.project.description) {
         state.project.description = "";
     }
-    return client.createWorkItem(globalOrganizationId, state.project.description, globalAliyunId, state.category, state.workItemType,  state.subject, state.description, defaultFieldValueList);
+    return await client.createWorkItem(organizationId, state.project.description, aliyunId, state.category, state.workItemType, state.subject, state.description, defaultFieldValueList);
 }

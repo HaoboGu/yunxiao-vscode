@@ -140,6 +140,7 @@ export function getWorkItemTypeIdentifier(workItemType: string | undefined) {
         }
         case "Bug": {
             // 缺陷
+            // TODO: check create it
             return "37da3a07df4d08aef2e3b393";
         }
     }

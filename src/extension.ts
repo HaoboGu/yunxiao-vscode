@@ -8,8 +8,6 @@ import { nextState, prevState } from "./workItemState";
 
 export let provider: YunxiaoWorkitemProvider;
 export let apiClient: YunxiaoClient;
-export let globalOrganizationId: string;
-export let globalAliyunId: string;
 export function activate(context: vscode.ExtensionContext) {
 	// Set context for package.json
 	vscode.commands.executeCommand('setContext', 'yunxiao.statusWithNext', [
@@ -38,10 +36,11 @@ export function activate(context: vscode.ExtensionContext) {
 
 	// login command
 	let loginCmd = vscode.commands.registerCommand('yunxiao.login', async () => {
-		let credential = await login(context);
-		if (credential) {
-			initializeYunxiaoWorkItemTree(credential.accessKeyId, credential.accessKeySecret, credential.organizationId);
-		}
+		login(context).then(credential => {
+			if (credential) {
+				initializeYunxiaoWorkItemTree(credential.accessKeyId, credential.accessKeySecret, credential.organizationId);
+			}
+		});
 	});
 
 	// Create yunxiao work item tree
@@ -54,30 +53,29 @@ export function activate(context: vscode.ExtensionContext) {
 		}
 	});
 	let createWorkItemCmd = vscode.commands.registerCommand('yunxiao.createWorkItem', async () => {
-		let result = await createWorkItem(apiClient);
-		provider.refresh();
+		createWorkItem(apiClient).then(_item => provider.refresh());
 	});
 	let setOrganizationIdCmd = vscode.commands.registerCommand('yunxiao.setOrganizationId', async () => {
-		await setOrganizationId();
-		createYunxiaoView(context);
+		setOrganizationId().then(() => createYunxiaoView(context));
 	});
 	let setAliyunIdCmd = vscode.commands.registerCommand('yunxiao.setAliyunId', async () => {
-		await setAliyunId();
-		createYunxiaoView(context);
+		setAliyunId().then(() => createYunxiaoView(context));
 	});
 	let nextStateCmd = vscode.commands.registerCommand('yunxiao.nextState', async (workItem: WorkItem) => {
-		let result = await nextState(workItem);
-		if (result) {
-			workItem.update(result);
-			provider.refreshItem(workItem);
-		}
+		nextState(workItem).then(result => {
+			if (result) {
+				workItem.update(result);
+				provider.refreshItem(workItem);
+			}
+		});
 	});
 	let prevStateCmd = vscode.commands.registerCommand('yunxiao.prevState', async (workItem: WorkItem) => {
-		let result = await prevState(workItem);
-		if (result) {
-			workItem.update(result);
-			provider.refreshItem(workItem);
-		}
+		prevState(workItem).then(result => {
+			if (result) {
+				workItem.update(result);
+				provider.refreshItem(workItem);
+			}
+		});
 	});
 
 	context.subscriptions.push(loginCmd, refreshTreeCmd, createWorkItemCmd, setOrganizationIdCmd, prevStateCmd, nextStateCmd, setAliyunIdCmd);
@@ -93,18 +91,18 @@ function createYunxiaoView(context: vscode.ExtensionContext) {
 		vscode.window.showErrorMessage("请正确设置云效登录信息");
 		return;
 	}
+
 	let organizationId: string | undefined = vscode.workspace.getConfiguration().get("yunxiao.organizationId");
 	if (!organizationId) {
-		vscode.window.showErrorMessage("请使用setOrganizationId命令设置云效企业ID");
+		vscode.window.showErrorMessage("请使用命令设置云效企业ID");
 		return;
 	}
+
 	let aliyunId: string | undefined = vscode.workspace.getConfiguration().get("yunxiao.aliyunId");
 	if (!aliyunId) {
-		vscode.window.showErrorMessage("请使用setAliyunId命令设置阿里云ID");
+		vscode.window.showErrorMessage("请使用命令设置阿里云ID");
 		return;
 	}
-	globalAliyunId = aliyunId;
-	globalOrganizationId = organizationId;
 	initializeYunxiaoWorkItemTree(accessKeyId, accessKeySecret, organizationId);
 }
 
@@ -113,4 +111,22 @@ function initializeYunxiaoWorkItemTree(accessKeyId: string, accessKeySecret: str
 	provider = new YunxiaoWorkitemProvider(organizationId);
 	vscode.window.registerTreeDataProvider('yunxiao-workitems', provider);
 	provider.refresh();
+}
+
+export function getOrganizationId() {
+	let organizationId: string | undefined = vscode.workspace.getConfiguration().get("yunxiao.organizationId");
+	if (!organizationId) {
+		vscode.window.showErrorMessage("请使用命令设置云效企业ID");
+		return;
+	}
+	return organizationId;
+}
+
+export function getAliyunId() {
+	let aliyunId: string | undefined = vscode.workspace.getConfiguration().get("yunxiao.aliyunId");
+	if (!aliyunId) {
+		vscode.window.showErrorMessage("请使用命令设置阿里云ID");
+		return;
+	}
+	return aliyunId;
 }
