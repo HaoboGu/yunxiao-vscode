@@ -75,7 +75,8 @@ export default class WorkItem extends TreeItem {
                 break;
             }
             case "已修复":
-            case "已完成": {
+            case "已完成":
+            case "已关闭": {
                 iconPath = path.join(__filename, "..", "..", "resource", "check-circle.svg");
                 break;
             }
@@ -128,7 +129,7 @@ export default class WorkItem extends TreeItem {
     }
 }
 
-export function getWorkItemTypeIdentifier(workItemType: string| undefined) {
+export function getWorkItemTypeIdentifier(workItemType: string | undefined) {
     switch (workItemType) {
         case "Task": {
             return "ba102e46bc6a8483d9b7f25c";
