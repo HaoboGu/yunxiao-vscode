@@ -24,10 +24,10 @@ export default class YunxiaoClient {
         let response = await this.apiClient?.listProjects(organizationId, request);
         if (response?.body.success && response.body.projects) {
             return response.body.projects.map(project => new Project(project));
-        } else {
+        } else if (!response?.body.success) {
             console.log("Calling Aliyun open api fails, error message: ", response?.body.errorMsg);
-            return [];
         }
+        return [];
     }
 
     public async listWorkItems(organizationId: string, projectIdentifier: string, workItemType: string) {
@@ -39,10 +39,10 @@ export default class YunxiaoClient {
         let response = await this.apiClient?.listWorkitems(organizationId, request);
         if (response?.body.success && response.body.workitems) {
             return response.body.workitems.map(item => new WorkItem(item));
-        } else {
+        } else if (!response?.body.success) {
             console.log("Calling Aliyun open api fails, error message: ", response?.body.errorMsg);
-            return [];
         }
+        return [];
     }
 
     public async updateWorkItemStatus(organizationId: string, workItem: WorkItem, statusIdentifier: string) {
@@ -55,10 +55,10 @@ export default class YunxiaoClient {
         let response = await this.apiClient?.updateWorkItem(organizationId, request);
         if (response?.body.success && response.body.workitem) {
             return response.body.workitem;
-        } else {
+        } else if (!response?.body.success) {
             console.log("Calling Aliyun open api fails, error message: ", response?.body.errorMsg);
-            return undefined;
         }
+        return undefined;
     }
 
     public async listWorkItemAllFields(organizationId: string, spaceIdentifier: string, workItemTypeIdentifier: string) {
@@ -70,10 +70,10 @@ export default class YunxiaoClient {
         let response = await this.apiClient?.listWorkItemAllFields(organizationId, request);
         if (response?.body.success && response.body.fields) {
             return response.body.fields;
-        } else {
+        } else if (!response?.body.success) {
             console.log("Calling Aliyun open api fails, error message: ", response?.body.errorMsg);
-            return undefined;
         }
+        return undefined;
     }
 
     public async createWorkItem(organizationId: string, spaceIdentifier: string, assignedTo: string, category: string, workItemType: string, subject: string, description: string, fieldValueList: Yunxiao.CreateWorkitemRequestFieldValueList[]) {
@@ -93,9 +93,9 @@ export default class YunxiaoClient {
         let response = await this.apiClient?.createWorkitem(organizationId, request);
         if (response?.body.success && response.body.workitem) {
             return response.body.workitem;
-        } else {
+        } else if (!response?.body.success) {
             console.log("Calling Aliyun open api fails, error message: ", response?.body.errorMsg);
-            return undefined;
         }
+        return undefined;
     }
 }
