@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
 import YunxiaoClient from "./client";
 import { MultiStepInput } from './components/multiStepInput';
-import { YunxiaoWorkitemProvider } from "./workitemProvider";
+import { YunxiaoWorkitemProvider } from "./workItemProvider";
 
 export async function login(context: vscode.ExtensionContext) {
     const title = "设置yunxiao-vscode";

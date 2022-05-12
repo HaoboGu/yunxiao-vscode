@@ -2,7 +2,7 @@ import * as vscode from "vscode";
 import YunxiaoClient from './client';
 import { login, setOrganizationId } from './login';
 import WorkItem from "./workitem";
-import { YunxiaoWorkitemProvider } from './workitemProvider';
+import { YunxiaoWorkitemProvider } from './workItemProvider';
 import { nextState, prevState } from "./workItemState";
 
 export let provider: YunxiaoWorkitemProvider;
