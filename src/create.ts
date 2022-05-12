@@ -62,19 +62,6 @@ export async function createWorkItem(client: YunxiaoClient) {
             validate: validateInputIsEmpty,
             shouldResume: shouldResume
         });
-        let requiredFields = [];
-        // 调用ListWorkItemAllFields接口，查看哪些额外的Fields是必填的
-        if (state.project?.description && type.description) {
-            let availableFields = await client.listWorkItemAllFields(globalOrganizationId, state.project.description, getWorkItemTypeIdentifier(type.description));
-            availableFields?.forEach(f => {
-                if (f.isRequired) {
-                    requiredFields.push(f);
-                }
-            });
-            console.log("Required Fields");
-        }
-        state.category = type.description;
-        state.workItemType = getWorkItemTypeIdentifier(state.category);
         return (input: MultiStepInput) => inputSubject(input, state);
     }
 
@@ -124,6 +111,5 @@ export async function createWorkItem(client: YunxiaoClient) {
     if (!state.project.description) {
         state.project.description = "";
     }
-    console.log(state);
     return client.createWorkItem(globalOrganizationId, state.project.description, globalAliyunId, state.category, state.workItemType,  state.subject, state.description, defaultFieldValueList);
 }

@@ -55,7 +55,7 @@ export function activate(context: vscode.ExtensionContext) {
 	});
 	let createWorkItemCmd = vscode.commands.registerCommand('yunxiao.createWorkItem', async () => {
 		let result = await createWorkItem(apiClient);
-		console.log(result);
+		provider.refresh();
 	});
 	let setOrganizationIdCmd = vscode.commands.registerCommand('yunxiao.setOrganizationId', async () => {
 		await setOrganizationId();
