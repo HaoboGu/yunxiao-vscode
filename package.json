@@ -84,7 +84,7 @@
       "activitybar": [
         {
           "id": "yunxiao",
-          "title": "Aliyun YunXiao",
+          "title": "%Yunxiao%",
           "icon": "resource/yunxiao.svg"
         }
       ]
