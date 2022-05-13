@@ -3,10 +3,10 @@ import YunxiaoClient from './client';
 import { createWorkItem } from "./create";
 import { login, setAliyunId, setOrganizationId } from './login';
 import WorkItem from "./workitem";
-import { YunxiaoWorkitemProvider } from './workItemProvider';
+import { YunxiaoWorkItemProvider } from './workItemProvider';
 import { nextState, prevState } from "./workItemState";
 
-export let provider: YunxiaoWorkitemProvider;
+export let provider: YunxiaoWorkItemProvider;
 export let apiClient: YunxiaoClient;
 export function activate(context: vscode.ExtensionContext) {
 	// Set context for package.json
@@ -111,7 +111,7 @@ function createYunxiaoView(context: vscode.ExtensionContext) {
 
 function initializeYunxiaoWorkItemTree(accessKeyId: string, accessKeySecret: string, organizationId: string) {
 	apiClient = new YunxiaoClient(accessKeyId, accessKeySecret);
-	provider = new YunxiaoWorkitemProvider(organizationId);
+	provider = new YunxiaoWorkItemProvider(organizationId);
 	vscode.window.registerTreeDataProvider('yunxiao-workitems', provider);
 	provider.refresh();
 }

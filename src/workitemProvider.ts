@@ -5,7 +5,7 @@ import path = require("path");
 import { apiClient } from './extension';
 import Project from './project';
 
-export class YunxiaoWorkitemProvider implements vscode.TreeDataProvider<WorkItem> {
+export class YunxiaoWorkItemProvider implements vscode.TreeDataProvider<WorkItem> {
     private organizationId: string;
     private projects: Project[];
     private _onDidChangeTreeData: vscode.EventEmitter<WorkItem | undefined | null | void> = new vscode.EventEmitter<WorkItem | undefined | null | void>();

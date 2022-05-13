@@ -125,8 +125,6 @@ function getStateIdentifier(state: string): string {
             return "100005";
         case "处理中":
             return "100010";
-        case "待处理":
-            return "100005";
         case "设计中":
             return "156603";
         case "开发中":
