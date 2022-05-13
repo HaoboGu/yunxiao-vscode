@@ -1,7 +1,8 @@
 {
   "name": "yunxiao-vscode",
   "displayName": "yunxiao-vscode",
-  "description": "",
+  "description": "Unofficial vscode extension for Aliyun Yunxiao",
+  "repository": "https://github.com/HaoboGu/yunxiao-vscode",
   "version": "0.0.1",
   "engines": {
     "vscode": "^1.67.0"
