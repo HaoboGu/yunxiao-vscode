@@ -1,0 +1,9 @@
+{
+    "yunxiao.login.title": "Login",
+    "Yunxiao": "Yunxiao",
+    "yunxiao.createWorkItem.title": "Create work item",
+    "yunxiao.setAliyunId.title": "Set aliyun id",
+    "yunxiao.setOrganizationId.title": "Set organization id",
+    "yunxiao.nextState.title": "Change work item state to next",
+    "yunxiao.prevState.title": "Change work item state to previous"
+}

@@ -28,49 +28,49 @@
     "commands": [
       {
         "command": "yunxiao.login",
-        "category": "Yunxiao",
-        "title": "登录云效",
-        "shortTitle": "Yunxiao: login",
+        "category": "%Yunxiao%",
+        "title": "%yunxiao.login.title%",
+        "shortTitle": "%yunxiao.login.title%",
         "icon": "resource/login.svg"
       },
       {
         "command": "yunxiao.refreshTree",
-        "category": "Yunxiao",
+        "category": "%Yunxiao%",
         "title": "刷新工作项",
         "shortTitle": "Yunxiao: Refresh work items",
         "icon": "resource/sync.svg"
       },
       {
         "command": "yunxiao.createWorkItem",
-        "category": "Yunxiao",
-        "title": "创建工作项",
-        "shortTitle": "Yunxiao: Create work item",
+        "category": "%Yunxiao%",
+        "title": "%yunxiao.createWorkItem.title%",
+        "shortTitle": "%yunxiao.createWorkItem.title%",
         "icon": "resource/plus.svg"
       },
       {
         "command": "yunxiao.setOrganizationId",
-        "category": "Yunxiao",
-        "title": "设置云效企业ID",
-        "shortTitle": "Yunxiao: Set organization id"
+        "category": "%Yunxiao%",
+        "title": "%yunxiao.setOrganizationId.title%",
+        "shortTitle": "%yunxiao.setOrganizationId.title%"
       },
       {
         "command": "yunxiao.setAliyunId",
-        "category": "Yunxiao",
-        "title": "设置阿里云ID",
-        "shortTitle": "Yunxiao: Set aliyun id"
+        "category": "%Yunxiao%",
+        "title": "%yunxiao.setAliyunId.title%",
+        "shortTitle": "%yunxiao.setAliyunId.title%"
       },
       {
         "command": "yunxiao.nextState",
-        "category": "Yunxiao",
-        "title": "切换到下个状态",
-        "shortTitle": "Yunxiao: Next state",
+        "category": "%Yunxiao%",
+        "title": "%yunxiao.nextState.title%",
+        "shortTitle": "%yunxiao.nextState.title%",
         "icon": "resource/right.svg"
       },
       {
         "command": "yunxiao.prevState",
-        "category": "Yunxiao",
-        "title": "切换到上个状态",
-        "shortTitle": "Yunxiao: Previous state",
+        "category": "%Yunxiao%",
+        "title": "%yunxiao.prevState.title%",
+        "shortTitle": "%yunxiao.prevState.title%",
         "icon": "resource/left.svg"
       }
     ],
