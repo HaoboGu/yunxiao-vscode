@@ -36,8 +36,8 @@
       {
         "command": "yunxiao.refreshTree",
         "category": "%Yunxiao%",
-        "title": "刷新工作项",
-        "shortTitle": "Yunxiao: Refresh work items",
+        "title": "%yunxiao.refreshTree.title%",
+        "shortTitle": "%yunxiao.refreshTree.title%",
         "icon": "resource/sync.svg"
       },
       {
