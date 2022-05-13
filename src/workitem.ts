@@ -1,10 +1,10 @@
-import { ListWorkitemsResponseBodyWorkitems, UpdateWorkItemResponseBodyWorkitem } from "@alicloud/devops20210625";
+import { CreateWorkitemResponseBodyWorkitem, ListWorkitemsResponseBodyWorkitems, UpdateWorkItemResponseBodyWorkitem } from "@alicloud/devops20210625";
 import { TreeItem, TreeItemCollapsibleState } from "vscode";
 import path = require("path");
 
 export default class WorkItem extends TreeItem {
     assignedTo?: string;
-    categoryIdentifier?: string;
+    categoryIdentifier?: string;  // Task/Req/Bug
     creator?: string;
     document?: string;
     gmtCreate?: number;
@@ -23,7 +23,7 @@ export default class WorkItem extends TreeItem {
     subject?: string;
     updateStatusAt?: number;
     workitemTypeIdentifier?: string;
-    constructor(rawWorkItem: ListWorkitemsResponseBodyWorkitems | UpdateWorkItemResponseBodyWorkitem) {
+    constructor(rawWorkItem: ListWorkitemsResponseBodyWorkitems | UpdateWorkItemResponseBodyWorkitem | CreateWorkitemResponseBodyWorkitem) {
         if (!rawWorkItem.subject) {
             rawWorkItem.subject = "";
         }
@@ -141,7 +141,6 @@ export function getWorkItemTypeIdentifier(workItemType: string | undefined) {
         }
         case "Bug": {
             // 缺陷
-            // TODO: check create it
             return "37da3a07df4d08aef2e3b393";
         }
     }
