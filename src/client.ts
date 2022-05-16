@@ -30,7 +30,7 @@ export default class YunxiaoClient {
         return [];
     }
 
-    public async listWorkItems(organizationId: string, projectIdentifier: string, workItemType: string) {
+    public async listWorkItems(organizationId: string, projectIdentifier: string, workItemType: string, aliyunId: string) {
         let request = new Yunxiao.ListWorkitemsRequest({
             category: workItemType,
             spaceIdentifier: projectIdentifier,
@@ -38,7 +38,7 @@ export default class YunxiaoClient {
         });
         let response = await this.apiClient?.listWorkitems(organizationId, request);
         if (response?.body.success && response.body.workitems) {
-            return response.body.workitems.map(item => new WorkItem(item));
+            return response.body.workitems.filter(item => item.assignedTo === aliyunId).map(item => new WorkItem(item));
         } else if (!response?.body.success) {
             console.log("Calling Aliyun open api fails, error message: ", response?.body.errorMsg);
         }

@@ -38,7 +38,7 @@ export function activate(context: vscode.ExtensionContext) {
 	let loginCmd = vscode.commands.registerCommand('yunxiao.login', async () => {
 		login(context).then(credential => {
 			if (credential) {
-				initializeYunxiaoWorkItemTree(credential.accessKeyId, credential.accessKeySecret, credential.organizationId);
+				initializeYunxiaoWorkItemTree(credential.accessKeyId, credential.accessKeySecret, credential.organizationId, credential.aliyunId);
 			}
 		});
 	});
@@ -106,12 +106,12 @@ function createYunxiaoView(context: vscode.ExtensionContext) {
 		vscode.window.showErrorMessage("请使用命令设置阿里云ID");
 		return;
 	}
-	initializeYunxiaoWorkItemTree(accessKeyId, accessKeySecret, organizationId);
+	initializeYunxiaoWorkItemTree(accessKeyId, accessKeySecret, organizationId, aliyunId);
 }
 
-function initializeYunxiaoWorkItemTree(accessKeyId: string, accessKeySecret: string, organizationId: string) {
+function initializeYunxiaoWorkItemTree(accessKeyId: string, accessKeySecret: string, organizationId: string, aliyunId: string) {
 	apiClient = new YunxiaoClient(accessKeyId, accessKeySecret);
-	provider = new YunxiaoWorkItemProvider(organizationId);
+	provider = new YunxiaoWorkItemProvider(organizationId, aliyunId);
 	vscode.window.registerTreeDataProvider('yunxiao-workitems', provider);
 	provider.refresh();
 }

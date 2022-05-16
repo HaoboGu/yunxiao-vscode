@@ -8,11 +8,13 @@ import Project from './project';
 export class YunxiaoWorkItemProvider implements vscode.TreeDataProvider<WorkItem> {
     private organizationId: string;
     private projects: Project[];
+    private aliyunId: string;
     private _onDidChangeTreeData: vscode.EventEmitter<WorkItem | undefined | null | void> = new vscode.EventEmitter<WorkItem | undefined | null | void>();
     readonly onDidChangeTreeData: vscode.Event<WorkItem | undefined | null | void> = this._onDidChangeTreeData.event;
 
-    constructor(organizationId: string) {
+    constructor(organizationId: string, aliyunId: string) {
         this.organizationId = organizationId;
+        this.aliyunId = aliyunId;
         this.projects = [];
     }
 
@@ -172,7 +174,7 @@ export class YunxiaoWorkItemProvider implements vscode.TreeDataProvider<WorkItem
         if (!spaceIdentifier) {
             return [];
         }
-        return await apiClient.listWorkItems(this.organizationId, spaceIdentifier, workItemType);
+        return await apiClient.listWorkItems(this.organizationId, spaceIdentifier, workItemType, this.aliyunId);
     }
 
     // Refresh the whole workitem tree view
