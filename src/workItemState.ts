@@ -105,6 +105,7 @@ export function getNextState(currentStatus: string, workItemType: string): strin
     } else if (workItemType === "Bug") {
         switch (currentStatus) {
             case "再次打开":
+            case "待确认":
             case "待修复": {
                 return "处理中";
             }

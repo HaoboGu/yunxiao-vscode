@@ -23,6 +23,7 @@ export function activate(context: vscode.ExtensionContext) {
 	]);
 	vscode.commands.executeCommand('setContext', 'yunxiao.statusWithNext', [
 		"待处理",
+		"待确认",
 		"待修复",
 		"再次打开",
 		"处理中",
