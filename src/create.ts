@@ -2,8 +2,7 @@ import { CreateWorkitemRequestFieldValueList } from "@alicloud/devops20210625";
 import { QuickPickItem } from "vscode";
 import YunxiaoClient from "./client";
 import { MultiStepInput } from "./components/multiStepInput";
-import { getAliyunId, getOrganizationId } from "./extension";
-import { getWorkItemTypeIdentifier } from "./workitem";
+import { apiClient, getAliyunId, getOrganizationId } from "./extension";
 
 export async function createWorkItem(client: YunxiaoClient) {
     const title = "创建云效工作项";
@@ -21,7 +20,7 @@ export async function createWorkItem(client: YunxiaoClient) {
         subject: string;
         description: string;
         category: string; // 工作项类型：Task/Req/Bug
-        workItemType: string; // 工作项小类型
+        workItemTypeIdentifier: string; // 工作项小类型
     }
 
     // 开始多步Input
@@ -67,7 +66,7 @@ export async function createWorkItem(client: YunxiaoClient) {
             shouldResume: shouldResume
         });
         state.category = type.description;
-        state.workItemType = getWorkItemTypeIdentifier(type.description);
+        state.workItemTypeIdentifier = await apiClient.getWorkItemTypeIdentifier(organizationId, state.project?.description, type.description);
 
         return (input: MultiStepInput) => inputSubject(input, state);
     }
@@ -111,9 +110,11 @@ export async function createWorkItem(client: YunxiaoClient) {
     }
 
     const state = await collectInputs();
+
+    // TODO: get it from remote
     let defaultFieldValueList: CreateWorkitemRequestFieldValueList[] = [new CreateWorkitemRequestFieldValueList({
         fieldIdentifier: "priority",
-        value: "4e3221ee4299cca11772b3c147",
+        value: "ecc1c76e8d9c2c097995869e31",
     })];
 
     if (state.category === "Bug") {
@@ -126,5 +127,5 @@ export async function createWorkItem(client: YunxiaoClient) {
     if (!state.project.description) {
         state.project.description = "";
     }
-    return await client.createWorkItem(organizationId, state.project.description, aliyunId, state.category, state.workItemType, state.subject, state.description, defaultFieldValueList);
+    return await client.createWorkItem(organizationId, state.project.description, aliyunId, state.category, state.workItemTypeIdentifier, state.subject, state.description, defaultFieldValueList);
 }

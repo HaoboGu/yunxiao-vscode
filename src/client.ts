@@ -6,6 +6,7 @@ import WorkItem from './workitem';
 export let currentUser: string = "";
 export default class YunxiaoClient {
     private apiClient: AliyunOpenApiClient | undefined;
+    private workItemIdentifierCache: Map<string, string>;
 
     constructor(accessKeyId: string, accessKeySecret: string) {
         let config = new OpenApi.Config({
@@ -15,6 +16,7 @@ export default class YunxiaoClient {
         // 访问的域名
         config.endpoint = `devops.cn-hangzhou.aliyuncs.com`;
         this.apiClient = new AliyunOpenApiClient(config);
+        this.workItemIdentifierCache = new Map();
     }
 
     public async listProjects(organizationId: string): Promise<Project[]> {
@@ -76,7 +78,7 @@ export default class YunxiaoClient {
         return undefined;
     }
 
-    public async createWorkItem(organizationId: string, spaceIdentifier: string, assignedTo: string, category: string, workItemType: string, subject: string, description: string, fieldValueList: Yunxiao.CreateWorkitemRequestFieldValueList[]) {
+    public async createWorkItem(organizationId: string, spaceIdentifier: string, assignedTo: string, category: string, workItemTypeIdentifier: string, subject: string, description: string, fieldValueList: Yunxiao.CreateWorkitemRequestFieldValueList[]) {
         let request = new Yunxiao.CreateWorkitemRequest({
             ak: new Yunxiao.CreateWorkitemRequestAk({ issue: new Yunxiao.CreateWorkitemRequestAkIssue({}) }),
             workitem: new Yunxiao.CreateWorkitemRequestWorkitem({}),
@@ -88,8 +90,9 @@ export default class YunxiaoClient {
             spaceIdentifier: spaceIdentifier,
             space: spaceIdentifier,
             spaceType: "Project",
-            workitemType: workItemType,
+            workitemType: workItemTypeIdentifier,
         });
+
         let response = await this.apiClient?.createWorkitem(organizationId, request);
         if (response?.body.success && response.body.workitem) {
             return response.body.workitem;
@@ -98,4 +101,30 @@ export default class YunxiaoClient {
         }
         return undefined;
     }
+
+    public async getWorkItemTypeIdentifier(organizationId: string | undefined, projectId: string | undefined, category: string | undefined) {
+        if (!organizationId || !projectId || !category) {
+            return undefined;
+        }
+        let key = organizationId + "," + projectId + "," + category;
+        if (this.workItemIdentifierCache.has(key)) {
+            return this.workItemIdentifierCache.get(key);
+        }
+        let request = new Yunxiao.ListProjectWorkitemTypesRequest({
+            spaceType: "Project",
+            category: category,
+        });
+        let response = await this.apiClient?.listProjectWorkitemTypes(organizationId, projectId, request);
+        if (response?.body.success && response.body.workitemTypes) {
+            let filtered = response.body.workitemTypes.filter(item => item.defaultType === true);
+            if (filtered.length > 0 && filtered[0].identifier) {
+                this.workItemIdentifierCache.set(key, filtered[0].identifier);
+                return filtered[0].identifier;
+            } 
+        } else if (!response?.body.success) {
+            console.log("Calling Aliyun open api fails, error message: ", response?.body.errorMsg);
+        }
+        return undefined;
+    }
+
 }

@@ -174,6 +174,7 @@ export class YunxiaoWorkItemProvider implements vscode.TreeDataProvider<WorkItem
         if (!spaceIdentifier) {
             return [];
         }
+        let workItemIdentifier = await apiClient.getWorkItemTypeIdentifier(this.organizationId, spaceIdentifier, workItemType);
         return await apiClient.listWorkItems(this.organizationId, spaceIdentifier, workItemType, this.aliyunId);
     }
 

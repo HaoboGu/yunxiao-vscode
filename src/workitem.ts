@@ -129,20 +129,3 @@ export default class WorkItem extends TreeItem {
         this.id = this.identifier;
     }
 }
-
-export function getWorkItemTypeIdentifier(workItemType: string | undefined) {
-    switch (workItemType) {
-        case "Task": {
-            return "ba102e46bc6a8483d9b7f25c";
-        }
-        case "Req": {
-            // 产品类需求
-            return "9uy29901re573f561d69jn40";
-        }
-        case "Bug": {
-            // 缺陷
-            return "37da3a07df4d08aef2e3b393";
-        }
-    }
-    return "ba102e46bc6a8483d9b7f25c";
-}
