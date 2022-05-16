@@ -10,6 +10,17 @@ export let provider: YunxiaoWorkItemProvider;
 export let apiClient: YunxiaoClient;
 export function activate(context: vscode.ExtensionContext) {
 	// Set context for package.json
+	vscode.commands.executeCommand('setContext', 'yunxiao.statusWithPrev', [
+		"再次打开",
+		"处理中",
+		"开发中",
+		"测试中",
+		"设计中",
+		"暂不修复",
+		"已取消",
+		"已完成",
+		"已关闭"
+	]);
 	vscode.commands.executeCommand('setContext', 'yunxiao.statusWithNext', [
 		"待处理",
 		"待修复",
@@ -21,17 +32,6 @@ export function activate(context: vscode.ExtensionContext) {
 		"暂不修复",
 		"已修复",
 		"已取消"
-	]);
-	vscode.commands.executeCommand('setContext', 'yunxiao.statusWithPrev', [
-		"再次打开",
-		"处理中",
-		"开发中",
-		"测试中",
-		"设计中",
-		"暂不修复",
-		"已取消",
-		"已完成",
-		"已关闭"
 	]);
 
 	// login command

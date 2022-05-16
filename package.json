@@ -61,18 +61,18 @@
         "shortTitle": "%yunxiao.setAliyunId.title%"
       },
       {
-        "command": "yunxiao.nextState",
-        "category": "%Yunxiao%",
-        "title": "%yunxiao.nextState.title%",
-        "shortTitle": "%yunxiao.nextState.title%",
-        "icon": "resource/right.svg"
-      },
-      {
         "command": "yunxiao.prevState",
         "category": "%Yunxiao%",
         "title": "%yunxiao.prevState.title%",
         "shortTitle": "%yunxiao.prevState.title%",
         "icon": "resource/left.svg"
+      },
+      {
+        "command": "yunxiao.nextState",
+        "category": "%Yunxiao%",
+        "title": "%yunxiao.nextState.title%",
+        "shortTitle": "%yunxiao.nextState.title%",
+        "icon": "resource/right.svg"
       }
     ],
     "viewsWelcome": [
@@ -128,13 +128,13 @@
       ],
       "view/item/context": [
         {
-          "command": "yunxiao.nextState",
-          "when": "view == yunxiao-workitems && viewItem in yunxiao.statusWithNext",
+          "command": "yunxiao.prevState",
+          "when": "view == yunxiao-workitems && viewItem in yunxiao.statusWithPrev",
           "group": "inline"
         },
         {
-          "command": "yunxiao.prevState",
-          "when": "view == yunxiao-workitems && viewItem in yunxiao.statusWithPrev",
+          "command": "yunxiao.nextState",
+          "when": "view == yunxiao-workitems && viewItem in yunxiao.statusWithNext",
           "group": "inline"
         }
       ]
