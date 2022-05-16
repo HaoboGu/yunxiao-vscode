@@ -78,11 +78,12 @@ export default class YunxiaoClient {
         return undefined;
     }
 
-    public async createWorkItem(organizationId: string, spaceIdentifier: string, assignedTo: string, category: string, workItemTypeIdentifier: string, subject: string, description: string, fieldValueList: Yunxiao.CreateWorkitemRequestFieldValueList[]) {
+    public async createWorkItem(organizationId: string, spaceIdentifier: string, assignedTo: string, category: string, workItemTypeIdentifier: string, subject: string, description: string) {
         let fields = await this.listWorkItemAllFields(organizationId, spaceIdentifier, workItemTypeIdentifier);
+        let fieldValueList: Yunxiao.CreateWorkitemRequestFieldValueList[] = [];
         if (fields) {
             fields.forEach(element => {
-                if (element.isRequired === true && element.identifier !== "assignedTo" && element.identifier !== "priority" && element.identifier !== "subject" && element.identifier !== "space" && element.identifier !== "seriousLevel") {
+                if (element.isRequired === true && element.identifier !== "assignedTo" && element.identifier !== "subject" && element.identifier !== "space") {
                     fieldValueList.push(new Yunxiao.CreateWorkitemRequestFieldValueList({
                         fieldIdentifier: element.identifier,
                         value: element.defaultValue,
@@ -104,6 +105,8 @@ export default class YunxiaoClient {
             spaceType: "Project",
             workitemType: workItemTypeIdentifier,
         });
+
+        console.log(request);
 
         let response = await this.apiClient?.createWorkitem(organizationId, request);
         if (response?.body.success && response.body.workitem) {

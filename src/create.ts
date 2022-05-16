@@ -111,21 +111,8 @@ export async function createWorkItem(client: YunxiaoClient) {
 
     const state = await collectInputs();
 
-    // TODO: get it from remote
-    let defaultFieldValueList: CreateWorkitemRequestFieldValueList[] = [new CreateWorkitemRequestFieldValueList({
-        fieldIdentifier: "priority",
-        value: "ecc1c76e8d9c2c097995869e31",
-    })];
-
-    if (state.category === "Bug") {
-        defaultFieldValueList.push(new CreateWorkitemRequestFieldValueList({
-            fieldIdentifier: "seriousLevel",
-            value: "7976384f5cbacf6e3bcf70da3b",
-        }));
-    }
-
     if (!state.project.description) {
         state.project.description = "";
     }
-    return await client.createWorkItem(organizationId, state.project.description, aliyunId, state.category, state.workItemTypeIdentifier, state.subject, state.description, defaultFieldValueList);
+    return await client.createWorkItem(organizationId, state.project.description, aliyunId, state.category, state.workItemTypeIdentifier, state.subject, state.description);
 }
