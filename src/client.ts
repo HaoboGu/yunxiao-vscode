@@ -79,6 +79,18 @@ export default class YunxiaoClient {
     }
 
     public async createWorkItem(organizationId: string, spaceIdentifier: string, assignedTo: string, category: string, workItemTypeIdentifier: string, subject: string, description: string, fieldValueList: Yunxiao.CreateWorkitemRequestFieldValueList[]) {
+        let fields = await this.listWorkItemAllFields(organizationId, spaceIdentifier, workItemTypeIdentifier);
+        if (fields) {
+            fields.forEach(element => {
+                if (element.isRequired === true && element.identifier !== "assignedTo" && element.identifier !== "priority" && element.identifier !== "subject" && element.identifier !== "space" && element.identifier !== "seriousLevel") {
+                    fieldValueList.push(new Yunxiao.CreateWorkitemRequestFieldValueList({
+                        fieldIdentifier: element.identifier,
+                        value: element.defaultValue,
+                    }));
+                }
+            });
+        }
+
         let request = new Yunxiao.CreateWorkitemRequest({
             ak: new Yunxiao.CreateWorkitemRequestAk({ issue: new Yunxiao.CreateWorkitemRequestAkIssue({}) }),
             workitem: new Yunxiao.CreateWorkitemRequestWorkitem({}),
@@ -120,7 +132,7 @@ export default class YunxiaoClient {
             if (filtered.length > 0 && filtered[0].identifier) {
                 this.workItemIdentifierCache.set(key, filtered[0].identifier);
                 return filtered[0].identifier;
-            } 
+            }
         } else if (!response?.body.success) {
             console.log("Calling Aliyun open api fails, error message: ", response?.body.errorMsg);
         }
